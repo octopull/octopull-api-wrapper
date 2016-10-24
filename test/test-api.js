@@ -9,13 +9,14 @@ describe('new.octopull', function(){
     var client = new Octopull();
 
     if(client){
+      assert.instanceOf(client, Octopull, 'client is an instance of Octopull');
       done();
     }
   })
 });
 
 describe('new.octopull.options', function(){
-  it('A new octopull instance with the given options', function(done){
+  it('should return new octopull instance with the given options', function(done){
     var client = new Octopull({
       baseUrl: 'http://octopull.me',
       acces_token: 'abc123'
@@ -28,3 +29,17 @@ describe('new.octopull.options', function(){
     }
   })
 });
+
+describe('octopull#user', function(){
+  it('should return a promise', function(done){
+    var client = new Octopull();
+
+    if(client){
+      var user = client.user();
+      assert.instanceOf(user, Promise, 'we have a Promise');
+      done();
+    }
+  });
+});
+
+

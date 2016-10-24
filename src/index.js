@@ -25,24 +25,28 @@ var Octopull = function(options){
     }
   });
 
-  this._get = function(options, callback){
-    return this.req
-        .get(options, function(err, req, data){
-          if( err ){
-            callback(err, null);
-          }else if(data.error){
-            callback(data.error, null);
-          }else{
-            callback(null, data);
-          }
-        });
+  this._get = function(options){
+    var self = this;
+
+    return new Promise(function(resolve, reject){
+      self.req
+          .get(options, function(err, res, data){
+            if( err ) return reject(err);
+
+            // if( ~~(res.statusCode / 100) !== 2 ){
+            //   return reject(new Error(err))
+            // }
+
+            return resolve(data);
+          });
+    });
   };
 
   return this;
 };
 
-Octopull.prototype.user = function(callback) {
-  return this._get({ uri: '/user' }, callback);
+Octopull.prototype.user = function() {
+  return this._get({ uri: '/user' });
 };
 
 Octopull.prototype.devices = function(callback) {
