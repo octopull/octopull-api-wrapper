@@ -4,16 +4,21 @@ var _       = require('lodash');
 var request = require('request');
 
 var Octopull = function(options){
-  this.options = options;
+  this.options = options || {};
 
   this.req = request.defaults({
-    baseUrl: options.baseUrl || process.env.OCTOPULL_BASE_URL || 'https://octopull.us/api',
+    baseUrl: this.options.baseUrl
+             || process.env.OCTOPULL_BASE_URL
+             || 'https://octopull.us/api',
+
     json: true,
     headers: {
-      'Authorization': 'token ' + options.token
+      'Authorization': 'token ' + this.options.token
     },
     qs:{
-      apiver: options.apiver || process.env.OCTOPULL_API_VERSION || 'v2'
+      apiver: this.options.apiver
+              || process.env.OCTOPULL_API_VERSION
+              || 'v2'
     },
     qsStringifyOptions: {
       arrayFormat: 'brackets'
@@ -21,7 +26,7 @@ var Octopull = function(options){
   });
 
   this._get = function(options, callback){
-    this.req
+    return this.req
         .get(options, function(err, req, data){
           if( err ){
             callback(err, null);
@@ -36,25 +41,24 @@ var Octopull = function(options){
   return this;
 };
 
-
 Octopull.prototype.user = function(callback) {
-  this._get({ uri: '/user' }, callback);
+  return this._get({ uri: '/user' }, callback);
 };
 
 Octopull.prototype.devices = function(callback) {
-  this._get({ uri: '/user/devices' }, callback);
+  return this._get({ uri: '/user/devices' }, callback);
 };
 
 Octopull.prototype.channels = function(callback) {
-  this._get({ uri: '/channels' }, callback);
+  return this._get({ uri: '/channels' }, callback);
 };
 
 Octopull.prototype.channelIds = function(callback) {
-  this._get({ uri: '/user/channels' }, callback);
+  return this._get({ uri: '/user/channels' }, callback);
 };
 
 Octopull.prototype.channelTokens = function(channel_id, callback) {
-  this._get({ uri: '/channels/' + channel_id + '/apn_tokens' }, callback);
+  return this._get({ uri: '/channels/' + channel_id + '/apn_tokens' }, callback);
 };
 
 module.exports = Octopull;
