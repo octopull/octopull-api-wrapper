@@ -1,6 +1,6 @@
 {
   "name": "octopull",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API wrapper for https://octopull.us in Node.js",
   "main": "src/index.js",
   "scripts": {
