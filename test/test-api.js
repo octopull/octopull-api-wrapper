@@ -4,14 +4,15 @@ var assert = require('chai').assert;
 var nock = require('nock');
 nock.disableNetConnect();
 
-var api = nock('https://octopull.us')
-           .get('/user')
-           .reply(200, {
-              id: 1,
-              first_name: 'Juan',
-              last_name: 'Puelpan',
-              email: 'juan@puelpan.coms'
-           });
+// TODO: Tests requests
+// nock('https://octopull.us')
+//   .get('/api/user?apiver=v2')
+//   .reply(200, {
+//     id: 1,
+//     first_name: 'Juan',
+//     last_name: 'Puelpan',
+//     email: 'juan@puelpan.com'
+//   });
 
 var Octopull = require('../src/index');
 
@@ -42,23 +43,10 @@ describe('octopull#options', function(){
 });
 
 describe('octopull#user', function(){
-  var client = new Octopull();
-  var user = client.user();
-
-  it('should return the user', function(done){
-    user.then(function(data){
-      assert.strictEqual({
-        id: 1,
-        first_name: 'Juan',
-        last_name: 'Puelpan',
-        email: 'juan@puelpan.com'
-      }, data);
-
-      done();
-    })
-  });
-
   it('should return a promise', function(done){
+    var client = new Octopull();
+    var user = client.user();
+
     assert.instanceOf(user, Promise, 'we have a Promise');
     done();
   });

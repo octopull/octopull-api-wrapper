@@ -65,7 +65,7 @@ var Octopull = function(options){
     return this._get({ uri: '/user/channels' });
   };
 
-  this.channelTokens = function(channel_id, ) {
+  this.channelTokens = function(channel_id) {
     return this._get({ uri: '/channels/' + channel_id + '/apn_tokens' });
   };
 
