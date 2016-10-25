@@ -33,9 +33,11 @@ var Octopull = function(options){
           .get(options, function(err, res, data){
             if( err ) return reject(err);
 
-            // if( ~~(res.statusCode / 100) !== 2 ){
-            //   return reject(new Error(err))
-            // }
+            if( ~~(res.statusCode / 100) !== 2 ){
+              return reject(
+                new Error( 'The API returned a ' + res.statusCode + ' status')
+              );
+            }
 
             return resolve(data);
           });
@@ -45,24 +47,28 @@ var Octopull = function(options){
   return this;
 };
 
-Octopull.prototype.user = function() {
-  return this._get({ uri: '/user' });
-};
+(function(){
 
-Octopull.prototype.devices = function(callback) {
-  return this._get({ uri: '/user/devices' }, callback);
-};
+  this.user = function() {
+    return this._get({ uri: '/user' });
+  };
 
-Octopull.prototype.channels = function(callback) {
-  return this._get({ uri: '/channels' }, callback);
-};
+  this.devices = function() {
+    return this._get({ uri: '/user/devices' });
+  };
 
-Octopull.prototype.channelIds = function(callback) {
-  return this._get({ uri: '/user/channels' }, callback);
-};
+  this.channels = function() {
+    return this._get({ uri: '/channels' });
+  };
 
-Octopull.prototype.channelTokens = function(channel_id, callback) {
-  return this._get({ uri: '/channels/' + channel_id + '/apn_tokens' }, callback);
-};
+  this.channelIds = function() {
+    return this._get({ uri: '/user/channels' });
+  };
+
+  this.channelTokens = function(channel_id, ) {
+    return this._get({ uri: '/channels/' + channel_id + '/apn_tokens' });
+  };
+
+}).call(Octopull.prototype);
 
 module.exports = Octopull;

@@ -1,10 +1,21 @@
 var describe = require('mocha').describe;
 var it = require('mocha').it;
 var assert = require('chai').assert;
+var nock = require('nock');
+nock.disableNetConnect();
+
+var api = nock('https://octopull.us')
+           .get('/user')
+           .reply(200, {
+              id: 1,
+              first_name: 'Juan',
+              last_name: 'Puelpan',
+              email: 'juan@puelpan.coms'
+           });
 
 var Octopull = require('../src/index');
 
-describe('new.octopull', function(){
+describe('octopull.new', function(){
   it('should create a new Octopull instance', function(done){
     var client = new Octopull();
 
@@ -15,7 +26,7 @@ describe('new.octopull', function(){
   })
 });
 
-describe('new.octopull.options', function(){
+describe('octopull#options', function(){
   it('should return new octopull instance with the given options', function(done){
     var client = new Octopull({
       baseUrl: 'http://octopull.me',
@@ -23,23 +34,33 @@ describe('new.octopull.options', function(){
     });
 
     if(client){
-      assert.strictEqual('http://octopull.me', client.options.baseUrl);
-      assert.strictEqual('abc123', client.options.acces_token);
+      assert.equal('http://octopull.me', client.options.baseUrl);
+      assert.equal('abc123', client.options.acces_token);
       done();
     }
   })
 });
 
 describe('octopull#user', function(){
-  it('should return a promise', function(done){
-    var client = new Octopull();
+  var client = new Octopull();
+  var user = client.user();
 
-    if(client){
-      var user = client.user();
-      assert.instanceOf(user, Promise, 'we have a Promise');
+  it('should return the user', function(done){
+    user.then(function(data){
+      assert.strictEqual({
+        id: 1,
+        first_name: 'Juan',
+        last_name: 'Puelpan',
+        email: 'juan@puelpan.com'
+      }, data);
+
       done();
-    }
+    })
+  });
+
+  it('should return a promise', function(done){
+    assert.instanceOf(user, Promise, 'we have a Promise');
+    done();
   });
 });
-
 
