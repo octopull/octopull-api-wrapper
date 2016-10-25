@@ -4,6 +4,7 @@ var _       = require('lodash');
 var request = require('request');
 
 var Octopull = function(options){
+  var self = this;
   this.options = options || {};
 
   this.req = request.defaults({
@@ -25,22 +26,22 @@ var Octopull = function(options){
     }
   });
 
-  this._get = function(options){
-    var self = this;
-
+  this._request = function(method, options){
     return new Promise(function(resolve, reject){
-      self.req
-          .get(options, function(err, res, data){
-            if( err ) return reject(err);
+      options = _.assign({}, options, { method: method });
 
-            if( ~~(res.statusCode / 100) !== 2 ){
-              return reject(
-                new Error( 'The API returned a ' + res.statusCode + ' status')
-              );
-            }
+      self.req(options, function(err, res, data){
+        if( err ) return reject(err);
 
-            return resolve(data);
-          });
+        if( ~~(res.statusCode / 100) !== 2 ){
+          return reject(
+            new Error( 'The API returned a ' + res.statusCode + ' status')
+          );
+        }
+
+        return resolve(data);
+      });
+
     });
   };
 
@@ -50,24 +51,28 @@ var Octopull = function(options){
 (function(){
 
   this.user = function() {
-    return this._get({ uri: '/user' });
+    return this._request('GET', { uri: '/user' });
   };
 
   this.devices = function() {
-    return this._get({ uri: '/user/devices' });
+    return this._request('GET', { uri: '/user/devices' });
   };
 
   this.channels = function() {
-    return this._get({ uri: '/channels' });
+    return this._request('GET', { uri: '/channels' });
   };
 
   this.channelIds = function() {
-    return this._get({ uri: '/user/channels' });
+    return this._request('GET', { uri: '/user/channels' });
   };
 
   this.channelTokens = function(channel_id) {
-    return this._get({ uri: '/channels/' + channel_id + '/apn_tokens' });
+    return this._request('GET', { uri: '/channels/' + channel_id + '/apn_tokens' });
   };
+
+  this.postMessage = function(data){
+    return this._request('POST', { uri: '/messages', body: data });
+  }
 
 }).call(Octopull.prototype);
 
