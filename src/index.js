@@ -35,7 +35,7 @@ var Octopull = function(options){
 
         if( ~~(res.statusCode / 100) !== 2 ){
           return reject(
-            new Error( 'The API returned a ' + res.statusCode + ' status')
+            new Error('The API returned a ' + res.statusCode + ' status: ' + JSON.stringify(res))
           );
         }
 
@@ -70,9 +70,13 @@ var Octopull = function(options){
     return this._request('GET', { uri: '/channels/' + channel_id + '/apn_tokens' });
   };
 
+  this.getChannel = function(channel_id){
+    return this._request('GET', { uri: '/channels/' + channel_id });
+  };
+
   this.postMessage = function(data){
     return this._request('POST', { uri: '/messages', body: data });
-  }
+  };
 
 }).call(Octopull.prototype);
 

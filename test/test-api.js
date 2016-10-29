@@ -25,7 +25,11 @@ nock('https://octopull.us')
     id: 1,
     first_name: 'Test',
     last_name: 'User'
-  })
+  });
+
+nock('https://octopull.us')
+  .get('/api/channels/notexistent?apiver=v2')
+  .reply(404);
 
 
 var client;
@@ -59,4 +63,14 @@ describe('octopull#postMessage', function(){
     })
   })
 });
+
+describe('octopull#channel', function(){
+  it('should return a 404 error', function(done){
+    client.getChannel('notexistent')
+      .catch(function(err){
+        assert.match(err, /404/);
+        done();
+      })
+  });
+})
 
