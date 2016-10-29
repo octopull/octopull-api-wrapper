@@ -78,6 +78,10 @@ var Octopull = function(options){
     return this._request('POST', { uri: '/messages', body: data });
   };
 
+  this.createPromise = function(data){
+    return this._request('POST', { uri: '/promises', body: data });
+  };
+
 }).call(Octopull.prototype);
 
 module.exports = Octopull;
