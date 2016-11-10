@@ -74,12 +74,83 @@ var Octopull = function(options){
     return this._request('GET', { uri: '/channels/' + channel_id });
   };
 
+  /* Messages */
+
   this.postMessage = function(data){
     return this._request('POST', { uri: '/messages', body: data });
   };
 
+  this.getMessage = function(message_id){
+    return this._request('GET', {
+      uri: '/messages/' + message_id
+    });
+  };
+
+  this.getMessages = function(channel_id, filters){
+    if( !channel_id ){
+      return Promise.reject(
+        new Error('You must specify a channel_id')
+      );
+    }
+
+    filters = _.merge({}, (filters || {}), {
+      channel_id: channel_id
+    });
+
+    return this._request('GET', {
+      uri: '/messages',
+      qs: filters
+    });
+  };
+
+  /* Promises */
+
   this.createPromise = function(data){
     return this._request('POST', { uri: '/promises', body: data });
+  };
+
+  this.updatePromise = function(promise_id, data){
+    if( !promise_id ){
+      return Promise.reject(
+        new Error('You must specify a promise_id')
+      );
+    }
+
+    return this._request('PUT', {
+      uri: '/promises/' + promise_id,
+      body: (data || {})
+    });
+  };
+
+  this.destroyPromise = function(promise_id){
+    if( !promise_id ){
+      return Promise.reject(
+        new Error('You must specify a promise_id')
+      );
+    }
+
+    return this._request('DELETE', { uri: '/promises/' + promise_id });
+  };
+
+  this.getPromise = function(promise_id){
+    if( !promise_id ){
+      return Promise.reject(
+        new Error('You must specify a promise_id')
+      );
+    }
+
+    return this._request('GET', {
+      uri: '/promises/' + promise_id
+    });
+  };
+
+  this.getPromises = function(filters){
+    filters = filters || {};
+
+    return this._request('GET', {
+      uri: '/promises',
+      qs: filters
+    });
   };
 
 }).call(Octopull.prototype);

@@ -1,6 +1,6 @@
 {
   "name": "octopull",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "API wrapper for https://octopull.us in Node.js",
   "main": "src/index.js",
   "scripts": {
@@ -25,5 +25,8 @@
     "chai-as-promised": "^6.0.0",
     "mocha": "^3.1.2",
     "nock": "^9.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://npm.zooft.company/"
   }
 }
