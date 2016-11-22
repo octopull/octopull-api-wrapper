@@ -1,6 +1,7 @@
 "use strict";
 
 var _       = require('lodash');
+var fs      = require('fs');
 var request = require('request');
 
 var Octopull = function(options){
@@ -151,6 +152,70 @@ var Octopull = function(options){
       uri: '/promises',
       qs: filters
     });
+  };
+
+  /* Files */
+
+  this.getFiles = function(filters){
+    filters = filters || {};
+
+    return this._request('GET', {
+      uri: '/files',
+      qs: filters
+    });
+  };
+
+  this.getFile = function(file_id){
+    return this._request('GET', {
+      uri: '/files/' + file_id
+    });
+  };
+
+  this.updateFile = function(file_id, data){
+    return this._request('PUT', {
+      uri: '/files/' + file_id,
+      body: (data || {})
+    });
+  };
+
+  this.uploadFile = function(file_path){
+    return this._request('POST', {
+      uri: '/files',
+      formData: {
+        file: fs.createReadStream(file_path)
+      }
+    });
+  };
+
+  this.downloadFile = function(file_id){
+    var this_ = this;
+
+    if( _.isObject(file_id) ){
+      var file = file_id;
+
+      return request({
+        uri: file.url,
+        qs: { download: 1 },
+        headers: {
+          'Authorization': 'token ' + this_.options.token
+        }
+      });      
+    }else if( _.isString(file_id) ){
+      return this.getFile(file_id)
+        .then(function(file){
+          return request({
+            uri: file.url,
+            qs: { download: 1 },
+            headers: {
+              'Authorization': 'token ' + this_.options.token
+            }
+          });
+        });
+    }else{
+      return Promise.reject(
+        new Error('You must specify a file_id or a File object with a url property')
+      );
+    }
   };
 
 }).call(Octopull.prototype);

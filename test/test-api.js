@@ -139,4 +139,6 @@ describe('Channels', function(){
         })
     });
   });
-})
+});
+
+// TODO: test for files
