@@ -178,39 +178,52 @@ var Octopull = function(options){
     });
   };
 
-  this.uploadFile = function(file_path){
-    return this._request('POST', {
-      uri: '/files',
-      formData: {
-        file: fs.createReadStream(file_path)
-      }
-    });
+  this.uploadFile = function(file_path, options){
+    if( file_path instanceof request.Request ){
+
+      return this._request('POST', {
+        uri: '/files',
+        formData: {
+          file: {
+            value: file_path,
+            options: options || null
+          }
+        }
+      });
+    }else{
+      return this._request('POST', {
+        uri: '/files',
+        formData: {
+          file: fs.createReadStream(file_path)
+        }
+      });
+    }
   };
 
   this.downloadFile = function(file_id){
     var this_ = this;
 
-    if( _.isObject(file_id) ){
-      var file = file_id;
-
+    var download = function(file){
       return request({
         uri: file.url,
         qs: { download: 1 },
         headers: {
           'Authorization': 'token ' + this_.options.token
         }
-      });      
+      });
+    };
+
+    if( _.isObject(file_id) ){
+
+      return download(file_id);
+
     }else if( _.isString(file_id) ){
+
       return this.getFile(file_id)
         .then(function(file){
-          return request({
-            uri: file.url,
-            qs: { download: 1 },
-            headers: {
-              'Authorization': 'token ' + this_.options.token
-            }
-          });
+          return download(file);
         });
+
     }else{
       return Promise.reject(
         new Error('You must specify a file_id or a File object with a url property')
