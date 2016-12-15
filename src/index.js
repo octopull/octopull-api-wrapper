@@ -71,8 +71,32 @@ var Octopull = function(options){
     return this._request('GET', { uri: '/channels/' + channel_id + '/apn_tokens' });
   };
 
+  /* Channels */
+
+  this.getChannels = function(filters){
+    return this._request('GET', {
+      uri: '/channels',
+      qs: filters || {}
+    });
+  };
+
   this.getChannel = function(channel_id){
     return this._request('GET', { uri: '/channels/' + channel_id });
+  };
+
+  /* Channel's members */
+
+  this.getChannelMembers = function(channel_id, filters){
+    return this._request('GET', {
+      uri: '/channels/' + channel_id + '/members',
+      qs: filters || {}
+    });
+  };
+
+  this.getChannelMember = function(channel_id, member_id){
+    return this._request('GET', {
+      uri: '/channels/' + channel_id + '/members/' + member_id
+    });
   };
 
   /* Messages */
