@@ -99,6 +99,13 @@ var Octopull = function(options){
     });
   };
 
+  this.getChannelMembersIdentities = function(channel_id, filters){
+    return this._request('GET', {
+      uri: '/channels/' + channel_id + '/members/identities',
+      qs: filters || {}
+    });
+  };
+
   /* Messages */
 
   this.postMessage = function(data){
