@@ -11,7 +11,7 @@ var Octopull = function(options){
   this.req = request.defaults({
     baseUrl: this.options.baseUrl
              || process.env.OCTOPULL_BASE_URL
-             || 'https://octopull.us/api',
+             || 'https://chat.octopull.us/api',
 
     json: true,
     headers: {
